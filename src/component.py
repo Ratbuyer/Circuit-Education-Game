@@ -19,8 +19,8 @@ class Wire:
             field[x][y] = self
 
     def rand_spawn(self, field):
-        self.x = randint(0, TILE_WIDTH-1)
-        self.y = randint(0, TILE_HEIGHT-1)
+        self.x = randint(0, 20)
+        self.y = randint(0, 20)
         if field[self.x][self.y] == None:
             field[self.x][self.y] = self
         else:

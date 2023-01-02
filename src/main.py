@@ -22,7 +22,7 @@ def initialise_game():
     game_state = "gameon"
     global field
     field = empty_field()
-    for i in range(160):
+    for i in range(441):
         Wire(field=field)
 
 def update_elements():
