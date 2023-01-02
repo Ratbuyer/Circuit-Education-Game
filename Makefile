@@ -1,2 +1,2 @@
 test:
-	python3 main.py
+	python3 src/main.py
