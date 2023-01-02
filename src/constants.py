@@ -10,8 +10,10 @@ clock = pygame.time.Clock()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Circuit Education")
 
+# color constants
 WHITE = (255, 255, 255)
-GREY  = (105,105,105)
+GREY  = (105, 105, 105)
+GREEN = (0, 255, 0)
 
 FPS = 60
 
@@ -49,5 +51,3 @@ WIRE_OFF = [
     pygame.transform.rotate(WIRE_OFF_IMG, 180),
     pygame.transform.rotate(WIRE_OFF_IMG, 270)
 ]
-
-# debug parts

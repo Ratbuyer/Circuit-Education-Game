@@ -10,16 +10,20 @@ def draw():
     pygame.display.update()
     return
     
+def empty_field():
+    f = []
+    for i in range(TILE_WIDTH):
+        f.append([None]*TILE_HEIGHT)
+    return f
 
 def initialise_game():
     WIN.fill(GREY)
     global game_state
     game_state = "gameon"
     global field
-    field = [[None]*TILE_HEIGHT]*TILE_WIDTH
-    Wire(field=field, x = 0, y = 0)
-    Wire(field=field, x = 1, y = 0)
-    # print("1", end="")
+    field = empty_field()
+    for i in range(160):
+        Wire(field=field)
 
 def update_elements():
     for i in field:
