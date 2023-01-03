@@ -12,8 +12,8 @@ def draw():
     
 def empty_field():
     f = []
-    for i in range(TILE_WIDTH):
-        f.append([None]*TILE_HEIGHT)
+    for i in range(WIDTH):
+        f.append([None]*HEIGHT)
     return f
 
 def initialise_game():
@@ -22,7 +22,7 @@ def initialise_game():
     game_state = "gameon"
     global field
     field = empty_field()
-    for i in range(441):
+    for i in range(800):
         Wire(field=field)
 
 def update_elements():
