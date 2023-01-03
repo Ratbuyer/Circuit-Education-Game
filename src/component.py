@@ -12,7 +12,9 @@ class Wire:
         self.connect = [0, 0, 0, 0]
         self.power = 0
         self.on = False
-    
+        self.img = []
+
+    # place item in field at (x, y)
     def place(self, field, x, y):
         self.x = x
         self.y = y
@@ -21,6 +23,8 @@ class Wire:
         else:
             print("Failed to place component")
 
+    # randomly place item in field,
+    # if tile occupied recursively re-place, until depth=attempt
     def rand_place(self, field=None, attempt=MAX_ATTEMPT):
         self.x = randint(BOUND[WEST], BOUND[EAST])
         self.y = randint(BOUND[NORTH], BOUND[SOUTH])
@@ -32,8 +36,33 @@ class Wire:
             else:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
-    def update(self, field):
-        sources = []
+    def initialise(self, field):
+        neighbours = self.get_neighbours(field=field)
+        for direc in range(DIREC):
+            neighbour = neighbours[direc]
+            if neighbour:
+                neighbour_open = neighbour.port[OPPOSITE[direc]]
+                self.connect[direc] = neighbour_open
+            else:
+                self.connect[direc] = 0
+        self.set_img()
+
+    def set_img(self):
+        blit_origin = (0, 0)
+        if self.connect == [0, 0, 0, 0]:
+            self.img = WIRE_LONE
+        else:
+            off_img, on_img = VOID.copy(), VOID.copy()
+            for direc in range(DIREC):
+                if self.connect[direc]:
+                    off_img.blit(WIRE_OFF[direc], blit_origin)
+                    on_img.blit(WIRE_ON[direc], blit_origin)
+            self.img = [off_img, on_img]
+
+
+    # return array of 4 neighbour object, value=None when no neighbour
+    def get_neighbours(self, field):
+        neighbours = []
         for direc in range(DIREC):
             neighbour = None
             neighbourX = self.x + OFFSET[direc][0]
@@ -42,34 +71,39 @@ class Wire:
                 neighbourX > BOUND[EAST] or 
                 neighbourY < BOUND[NORTH] or 
                 neighbourY > BOUND[SOUTH]):
+                neighbours.append(neighbour)
                 continue
             neighbour = field[neighbourX][neighbourY]
-            if neighbour:
-                neighbour_open = neighbour.port[OPPOSITE[direc]]
-                self.connect[direc] = neighbour_open
-                if neighbour.output[OPPOSITE[direc]]:
-                    sources.append(neighbour.power)
-            else:
-                self.connect[direc] = 0
-        if sources:
-            self.power = max(sources) - 1
+            neighbours.append(neighbour)
+        return neighbours
+
+    def update(self, field):
+        max_source = 0
+
+        neighbours = self.get_neighbours(field=field)
+        for direc in range(DIREC):
+            neighbour = neighbours[direc]
+            if neighbour and neighbour.output[OPPOSITE[direc]]:
+                max_source = max(max_source, neighbour.power)
+
+        if self.power < max_source:
+            self.power = max_source - 1
         else:
             self.power = 0
+
         self.on = self.power > 0
 
+    # return a coord pair coverted from TILE -> PIX
     def calc_pix_coord(self):
         x = int(TILE_SIDE * self.x)
         y = int(TILE_SIDE * self.y)
         return (x, y)
 
+    # render item on given screen
     def render(self, screen):
         blit_coord = self.calc_pix_coord()
-        if self.connect == [0, 0, 0, 0]:
-            screen.blit(WIRE_LONE[self.on], blit_coord)
-        wire_disp = WIRE_ON if self.on else WIRE_OFF
-        for direc in range(DIREC):
-            if self.connect[direc]:
-                screen.blit(wire_disp[direc], blit_coord)
+        screen.blit(self.img[self.on], blit_coord)
+
         # # box boundary display
         # debug_box = pygame.Rect(blit_coord, (TILE_SIDE, TILE_SIDE))
         # pygame.draw.rect(screen, GREEN, debug_box, width=1)
@@ -121,4 +155,6 @@ class Switch:
     def interact(self):
         self.on = not self.on
         self.power = SWITCH_POWER if self.on else 0
-        # print(self.power)
+
+    def initialise(self, field):
+        pass

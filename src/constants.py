@@ -62,8 +62,10 @@ WIRE_OFF = [
     pygame.transform.rotate(WIRE_OFF_IMG, 270)
 ]
 SWITCH_COVER = pygame.image.load("./asset/switch_cover.png").convert_alpha()
-
+VOID = pygame.image.load("./asset/void.png").convert_alpha()
 
 
 MAX_ATTEMPT = 300
-SWITCH_POWER = 50
+SWITCH_POWER = 80
+
+# UPDATE_QUEUE = []

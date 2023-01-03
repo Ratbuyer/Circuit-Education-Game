@@ -8,9 +8,16 @@ def initialise_game():
     game_state = "gameon"
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
-    Switch(field=field, x=10, y=10, on=True)
+    Switch(field=field, x=3, y=2, on=True)
     for i in range(800):
         Wire(field=field)
+    init_items()
+
+def init_items():
+    for i in field:
+        for elem in i:
+            if elem:
+                elem.initialise(field=field)
 
 def update_elements():
     for i in field:
@@ -41,7 +48,7 @@ def main():
                 elif event.key == pygame.K_k:
                     initialise_game()
                 elif event.key == pygame.K_j:
-                    field[10][10].interact()
+                    field[3][2].interact()
                 else:
                     pass
         keys_pressed = pygame.key.get_pressed()
