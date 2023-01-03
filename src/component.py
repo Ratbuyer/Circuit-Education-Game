@@ -10,6 +10,7 @@ class Wire:
         self.output = [0, 0, 0, 0]
         self.port  = [1, 1, 1, 1]
         self.connect = [0, 0, 0, 0]
+        self.source = []
         self.on = False
     
     def place(self, field, x, y):
@@ -27,7 +28,7 @@ class Wire:
             field[self.x][self.y] = self
         else:
             if attempt >= 0:
-                self.rand_place(field=field)
+                self.rand_place(field=field, attempt=attempt-1)
             else:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
@@ -76,7 +77,7 @@ class Switch:
             self.rand_place(field=field)
         else:
             self.place(field=field, x=x, y=y)
-        self.output = [0, 0, 0, 0]
+        self.output = [1, 1, 1, 1]
         self.port  = [1, 1, 1, 1]
         self.on = on
 
@@ -89,8 +90,8 @@ class Switch:
             print("Failed to place component")
 
     def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(0, 44)
-        self.y = randint(0, 25)
+        self.x = randint(BOUND[WEST], BOUND[EAST])
+        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
         if field[self.x][self.y] == None:
             field[self.x][self.y] = self
         else:
@@ -98,3 +99,20 @@ class Switch:
                 self.rand_place(field=field, attempt=attempt-1)
             else:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
+    
+    def update(self, field):
+        pass
+    
+
+    def calc_pix_coord(self):
+        x = int(TILE_SIDE * self.x)
+        y = int(TILE_SIDE * self.y)
+        return (x, y)
+        
+    def render(self, screen):
+        blit_coord = self.calc_pix_coord()
+        screen.blit(WIRE_LONE[self.on], blit_coord)
+        screen.blit(SWITCH_COVER, blit_coord)
+
+    def interact(self):
+        self.on = not self.on

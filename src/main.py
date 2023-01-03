@@ -2,27 +2,14 @@ import pygame
 from constants import *
 from component import *
 
-
-def draw():
-
-    WIN.fill(WHITE)
-    # WIN.blit(AND, (500, 500))
-    pygame.display.update()
-    return
-    
-def empty_field():
-    f = []
-    for i in range(WIDTH):
-        f.append([None]*HEIGHT)
-    return f
-
 def initialise_game():
     WIN.fill(GREY)
     global game_state
     game_state = "gameon"
     global field
-    field = empty_field()
-    for i in range(800):
+    field = [[None]*HEIGHT for i in range(WIDTH)]
+    Switch(field=field, x=10, y=10, on=True)
+    for i in range(500):
         Wire(field=field)
 
 def update_elements():
@@ -53,6 +40,8 @@ def main():
                     game_state = "gameon"
                 elif event.key == pygame.K_k:
                     initialise_game()
+                elif event.key == pygame.K_j:
+                    field[10][10].interact()
                 else:
                     pass
         keys_pressed = pygame.key.get_pressed()
