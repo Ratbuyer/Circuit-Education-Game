@@ -7,10 +7,10 @@ class Wire:
             self.rand_place(field=field)
         else:
             self.place(field=field, x=x, y=y)
-        self.output = [0, 0, 0, 0]
-        self.port  = [1, 1, 1, 1]
+        self.output  = [1, 1, 1, 1]
+        self.port    = [1, 1, 1, 1]
         self.connect = [0, 0, 0, 0]
-        self.source = []
+        self.power = 0
         self.on = False
     
     def place(self, field, x, y):
@@ -33,7 +33,7 @@ class Wire:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
     def update(self, field):
-        power = 0
+        sources = []
         for direc in range(DIREC):
             neighbour = None
             neighbourX = self.x + OFFSET[direc][0]
@@ -48,11 +48,14 @@ class Wire:
                 neighbour_open = neighbour.port[OPPOSITE[direc]]
                 self.connect[direc] = neighbour_open
                 if neighbour.output[OPPOSITE[direc]]:
-                    power = 1
-                    self.on = True
+                    sources.append(neighbour.power)
             else:
                 self.connect[direc] = 0
-        self.output = [power]*4
+        if sources:
+            self.power = max(sources) - 1
+        else:
+            self.power = 0
+        self.on = self.power > 0
 
     def calc_pix_coord(self):
         x = int(TILE_SIDE * self.x)
@@ -80,6 +83,7 @@ class Switch:
         self.output = [1, 1, 1, 1]
         self.port  = [1, 1, 1, 1]
         self.on = on
+        self.power = SWITCH_POWER if self.on else 0
 
     def place(self, field, x, y):
         self.x = x
@@ -116,3 +120,5 @@ class Switch:
 
     def interact(self):
         self.on = not self.on
+        self.power = SWITCH_POWER if self.on else 0
+        # print(self.power)

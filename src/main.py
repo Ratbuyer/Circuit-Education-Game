@@ -9,7 +9,7 @@ def initialise_game():
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
     Switch(field=field, x=10, y=10, on=True)
-    for i in range(500):
+    for i in range(800):
         Wire(field=field)
 
 def update_elements():
