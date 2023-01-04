@@ -10,9 +10,13 @@ def initialise_game():
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
     Switch(field=field, x=3, y=2, on=True)
-    for i in range(800):
+    AndGate(field=field, x=10, y=10)
+
+    for i in range(10):
         Wire(field=field)
+
     init_items()
+
     global frame 
     frame = SelectFrame(x=3, y=3)
     

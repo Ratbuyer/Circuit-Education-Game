@@ -38,7 +38,7 @@ class Wire:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
     def initialise(self, field):
-        neighbours = self.get_neighbours(field=field)
+        neighbours = get_neighbours(item=self, field=field)
         for direc in range(DIREC):
             neighbour = neighbours[direc]
             if neighbour:
@@ -61,27 +61,10 @@ class Wire:
             self.img = [off_img, on_img]
 
 
-    # return array of 4 neighbour object, value=None when no neighbour
-    def get_neighbours(self, field):
-        neighbours = []
-        for direc in range(DIREC):
-            neighbour = None
-            neighbourX = self.x + OFFSET[direc][0]
-            neighbourY = self.y + OFFSET[direc][1]
-            if (neighbourX < BOUND[WEST] or 
-                neighbourX > BOUND[EAST] or 
-                neighbourY < BOUND[NORTH] or 
-                neighbourY > BOUND[SOUTH]):
-                neighbours.append(neighbour)
-                continue
-            neighbour = field[neighbourX][neighbourY]
-            neighbours.append(neighbour)
-        return neighbours
-
     def update(self, field):
         max_source = 0
 
-        neighbours = self.get_neighbours(field=field)
+        neighbours = get_neighbours(item=self, field=field)
         for direc in range(DIREC):
             neighbour = neighbours[direc]
             if neighbour and neighbour.output[OPPOSITE[direc]]:
@@ -152,3 +135,51 @@ class Switch:
 
     def initialise(self, field):
         pass
+
+
+class AndGate:
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
+        if not x or not y:
+            self.rand_place(field=field)
+        else:
+            self.place(field=field, x=x, y=y)
+        self.output = [1, 0, 0, 0]
+        self.port  = [1, 1, 0, 1]
+        self.on = on
+        self.power = 0
+
+    def place(self, field, x, y):
+        self.x = x
+        self.y = y
+        if field[x][y] == None:
+            field[x][y] = self
+        else:
+            print("Failed to place component")
+
+    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
+        self.x = randint(BOUND[WEST], BOUND[EAST])
+        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
+        if field[self.x][self.y] == None:
+            field[self.x][self.y] = self
+        else:
+            if attempt >= 0:
+                self.rand_place(field=field, attempt=attempt-1)
+            else:
+                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
+
+    def update(self, field):
+        neighbours = get_neighbours(self, field)
+        if (neighbours[WEST] and neighbours[WEST].output[OPPOSITE[WEST]] and
+            neighbours[EAST] and neighbours[EAST].output[OPPOSITE[EAST]] and
+            neighbours[WEST].power > 0  and neighbours[EAST].power > 0):
+            self.power = SWITCH_POWER
+        else:
+            self.power = 0
+    
+    def render(self, screen):
+        blit_coord = calc_pix_coord(self)
+        screen.blit(AND_IMG, blit_coord)
+        
+    def initialise(self, field):
+        pass
+                

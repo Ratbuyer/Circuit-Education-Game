@@ -22,3 +22,19 @@ class SelectFrame:
     def click(self, mouse_press, field):
         if mouse_press[0] and field[self.x][self.y]:
             field[self.x][self.y].interact()
+        elif mouse_press[2] and field[self.x][self.y]==None:
+            Wire(field=field, x=self.x, y=self.y)
+            item = field[self.x][self.y]
+            item.initialise(field)
+            neighbours = get_neighbours(item, field)
+            for i in neighbours:
+                if i:
+                    i.initialise(field)
+        elif (mouse_press[2] and 
+            type(field[self.x][self.y]).__name__=="Wire"):
+            item = field[self.x][self.y]
+            neighbours = get_neighbours(item, field)
+            field[self.x][self.y] = None
+            for i in neighbours:
+                if i:
+                    i.initialise(field)
