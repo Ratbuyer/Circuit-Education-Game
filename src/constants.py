@@ -40,6 +40,8 @@ DIREC = 4
 
 # game asset loading
 AND_IMG = pygame.image.load("./asset/and.png").convert_alpha()
+OR_IMG = pygame.image.load("./asset/or.png").convert_alpha()
+NOT_IMG = pygame.image.load("./asset/not.png").convert_alpha()
 
 WIRE_LONE = [
     pygame.image.load("./asset/wire/wire_lone_off.png").convert_alpha(),

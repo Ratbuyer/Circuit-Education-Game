@@ -11,7 +11,8 @@ def initialise_game():
     field = [[None]*HEIGHT for i in range(WIDTH)]
     Switch(field=field, x=3, y=2, on=True)
     AndGate(field=field, x=10, y=10)
-
+    OrGate(field=field, x=15, y=10)
+    NotGate(field=field, x=10, y=5)
     for i in range(10):
         Wire(field=field)
 

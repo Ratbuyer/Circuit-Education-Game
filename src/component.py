@@ -182,4 +182,94 @@ class AndGate:
         
     def initialise(self, field):
         pass
+
+class OrGate:
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
+        if not x or not y:
+            self.rand_place(field=field)
+        else:
+            self.place(field=field, x=x, y=y)
+        self.output = [1, 0, 0, 0]
+        self.port  = [1, 1, 0, 1]
+        self.on = on
+        self.power = 0
+
+    def place(self, field, x, y):
+        self.x = x
+        self.y = y
+        if field[x][y] == None:
+            field[x][y] = self
+        else:
+            print("Failed to place component")
+
+    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
+        self.x = randint(BOUND[WEST], BOUND[EAST])
+        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
+        if field[self.x][self.y] == None:
+            field[self.x][self.y] = self
+        else:
+            if attempt >= 0:
+                self.rand_place(field=field, attempt=attempt-1)
+            else:
+                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
+
+    def update(self, field):
+        # neighbours = get_neighbours(self, field)
+        supplies = get_power_supply(self, field)
+        if (supplies[WEST] or supplies[EAST]):
+            self.power = SWITCH_POWER
+        else:
+            self.power = 0
+    
+    def render(self, screen):
+        blit_coord = calc_pix_coord(self)
+        screen.blit(OR_IMG, blit_coord)
+        
+    def initialise(self, field):
+        pass
+
+class NotGate:
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
+        if not x or not y:
+            self.rand_place(field=field)
+        else:
+            self.place(field=field, x=x, y=y)
+        self.output = [1, 0, 0, 0]
+        self.port  = [1, 0, 1, 0]
+        self.on = on
+        self.power = 0
+
+    def place(self, field, x, y):
+        self.x = x
+        self.y = y
+        if field[x][y] == None:
+            field[x][y] = self
+        else:
+            print("Failed to place component")
+
+    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
+        self.x = randint(BOUND[WEST], BOUND[EAST])
+        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
+        if field[self.x][self.y] == None:
+            field[self.x][self.y] = self
+        else:
+            if attempt >= 0:
+                self.rand_place(field=field, attempt=attempt-1)
+            else:
+                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
+
+    def update(self, field):
+        # neighbours = get_neighbours(self, field)
+        supplies = get_power_supply(self, field)
+        if supplies[SOUTH]:
+            self.power = 0
+        else:
+            self.power = SWITCH_POWER
+    
+    def render(self, screen):
+        blit_coord = calc_pix_coord(self)
+        screen.blit(NOT_IMG, blit_coord)
+        
+    def initialise(self, field):
+        pass
                 

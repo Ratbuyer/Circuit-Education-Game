@@ -28,3 +28,15 @@ def get_neighbours(item, field):
         neighbour = field[neighbourX][neighbourY]
         neighbours.append(neighbour)
     return neighbours
+
+def get_power_supply(item, field):
+    neighbours = get_neighbours(item, field)
+    supply = [0]*4
+    for direc in range(DIREC):
+        neighbour = neighbours[direc]
+        if (neighbour and 
+            neighbour.output[OPPOSITE[direc]]):
+            supply[direc] = neighbour.power
+        else:
+            supply[direc] = 0
+    return supply
