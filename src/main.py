@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 from component import *
+from game_element import *
 
 def initialise_game():
     WIN.fill(GREY)
@@ -12,24 +13,30 @@ def initialise_game():
     for i in range(800):
         Wire(field=field)
     init_items()
+    global frame 
+    frame = SelectFrame(x=3, y=3)
+    
 
 def init_items():
     for i in field:
         for elem in i:
             if elem:
-                elem.initialise(field=field)
+                elem.initialise(field)
 
-def update_elements():
+def update_components(mouse_pos):
     for i in field:
         for elem in i:
             if elem:
                 elem.update(field)
+    frame.update(mouse_pos, field)
 
 def render_elements():
+    WIN.fill(GREY)
     for i in field:
         for elem in i:
             if elem:
                 elem.render(WIN)
+    frame.render(WIN)
 
 def main():
     initialise_game()
@@ -47,15 +54,18 @@ def main():
                     game_state = "gameon"
                 elif event.key == pygame.K_k:
                     initialise_game()
-                elif event.key == pygame.K_j:
-                    field[3][2].interact()
                 else:
                     pass
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_press = pygame.mouse.get_pressed()
+                frame.click(mouse_press, field)
+
         keys_pressed = pygame.key.get_pressed()
+        mouse_pos = pygame.mouse.get_pos()
         if game_state == "gameon":
 
 
-            update_elements()
+            update_components(mouse_pos)
 
             render_elements()
         

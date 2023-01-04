@@ -1,5 +1,6 @@
 from random import randint
 from constants import *
+from util import *
 
 class Wire:
     def __init__(self, field=None, x=None, y=None) -> None:
@@ -93,20 +94,19 @@ class Wire:
 
         self.on = self.power > 0
 
-    # return a coord pair coverted from TILE -> PIX
-    def calc_pix_coord(self):
-        x = int(TILE_SIDE * self.x)
-        y = int(TILE_SIDE * self.y)
-        return (x, y)
 
     # render item on given screen
     def render(self, screen):
-        blit_coord = self.calc_pix_coord()
+        blit_coord = calc_pix_coord(self)
         screen.blit(self.img[self.on], blit_coord)
 
         # # box boundary display
         # debug_box = pygame.Rect(blit_coord, (TILE_SIDE, TILE_SIDE))
         # pygame.draw.rect(screen, GREEN, debug_box, width=1)
+    
+    def interact(self):
+        pass
+
 
 class Switch:
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
@@ -140,15 +140,9 @@ class Switch:
     
     def update(self, field):
         pass
-    
-
-    def calc_pix_coord(self):
-        x = int(TILE_SIDE * self.x)
-        y = int(TILE_SIDE * self.y)
-        return (x, y)
         
     def render(self, screen):
-        blit_coord = self.calc_pix_coord()
+        blit_coord = calc_pix_coord(self)
         screen.blit(WIRE_LONE[self.on], blit_coord)
         screen.blit(SWITCH_COVER, blit_coord)
 

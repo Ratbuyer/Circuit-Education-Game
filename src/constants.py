@@ -64,6 +64,7 @@ WIRE_OFF = [
 SWITCH_COVER = pygame.image.load("./asset/switch_cover.png").convert_alpha()
 VOID = pygame.image.load("./asset/void.png").convert_alpha()
 
+SELECT_FRAME = pygame.image.load("./asset/select_frame.png").convert_alpha()
 
 MAX_ATTEMPT = 300
 SWITCH_POWER = 80
