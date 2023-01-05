@@ -43,8 +43,8 @@ AND_IMG = pygame.image.load("./asset/gates/and.png").convert_alpha()
 OR_IMG = pygame.image.load("./asset/gates/or.png").convert_alpha()
 NOT_IMG = pygame.image.load("./asset/gates/not.png").convert_alpha()
 
-TIMER = pygame.image.load("./asset/timer/timer_base.png").convert_alpha()
-
+TIMER_BASE = pygame.image.load("./asset/timer/timer_base.png").convert_alpha()
+TIMER_HAND = pygame.image.load("./asset/timer/timer_hand.png").convert_alpha()
 
 WIRE_LONE = [
     pygame.image.load("./asset/wire/wire_lone_off.png").convert_alpha(),
@@ -72,6 +72,6 @@ VOID = pygame.image.load("./asset/void.png").convert_alpha()
 SELECT_FRAME = pygame.image.load("./asset/select_frame.png").convert_alpha()
 
 MAX_ATTEMPT = 300
-SWITCH_POWER = 80
+SWITCH_POWER = 800
 
 # UPDATE_QUEUE = []

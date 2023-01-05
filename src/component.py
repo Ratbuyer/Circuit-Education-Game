@@ -282,6 +282,7 @@ class Timer:
         self.on = on
         self.tick = 0
         self.maxtick = maxsec * FPS
+        self.eith_tick = self.maxtick/8
         self.power = 0
 
     def place(self, field, x, y):
@@ -312,7 +313,9 @@ class Timer:
     
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
-        screen.blit(TIMER, blit_coord)
-        
+        rot_angle = calc_angle(self.tick, self.maxtick)
+        hand_img = rot_center(TIMER_HAND, rot_angle)
+        screen.blit(TIMER_BASE, blit_coord)
+        screen.blit(hand_img, blit_coord)        
     def initialise(self, field):
         pass
