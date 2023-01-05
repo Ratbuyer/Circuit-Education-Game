@@ -13,6 +13,7 @@ def initialise_game():
     AndGate(field=field, x=10, y=10)
     OrGate(field=field, x=15, y=10)
     NotGate(field=field, x=10, y=5)
+    Timer(field=field, x=20, y=10)
     for i in range(10):
         Wire(field=field)
 
