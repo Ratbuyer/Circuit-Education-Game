@@ -2,8 +2,11 @@ from random import randint
 from constants import *
 from util import *
 
+def str_to_class(classname):
+    return getattr(sys.modules[__name__], classname)
+
 class Wire:
-    def __init__(self, field=None, x=None, y=None) -> None:
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
         if not x or not y:
             self.rand_place(field=field)
         else:

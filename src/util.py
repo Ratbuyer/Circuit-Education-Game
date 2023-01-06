@@ -1,4 +1,6 @@
 import pygame
+import json
+import sys
 from constants import *
 
 # return a coord pair coverted from TILE -> PIX
@@ -52,3 +54,16 @@ def get_power_supply(item, field):
         else:
             supply[direc] = 0
     return supply
+
+def jsonify(item):
+    if item:
+        dic = {
+            'class': type(item).__name__,
+            'x':item.x,
+            'y':item.y,
+            'on':item.on
+        }
+    else:
+        return None
+    return [json.dumps(dic)]
+

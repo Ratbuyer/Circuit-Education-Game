@@ -1,7 +1,37 @@
 import pygame
+import csv
 from constants import *
 from component import *
 from game_element import *
+
+def save_level():
+    level = []
+    for i in field:
+        for j in i:
+            if j:
+                level.append(jsonify(j))
+    with open(LEVEL_PATH+'lv1.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(level)
+
+def load_level():
+    global field
+    field = [[None]*HEIGHT for i in range(WIDTH)]
+    level = []
+    with open(LEVEL_PATH+'lv1.csv', 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            level.append(row)
+    level = [i[0] for i in level]
+    level = [json.loads(i) for i in level]
+    for comp in level:
+        classHandle = str_to_class(comp['class'])
+        x = int(comp['x'])
+        y = int(comp['y'])
+        on = comp['on']
+        classHandle(field=field, x=x, y=y, on=on)
+    init_items()
+    
 
 def initialise_game():
     WIN.fill(GREY)
@@ -9,14 +39,13 @@ def initialise_game():
     game_state = "gameon"
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
-    Switch(field=field, x=3, y=2, on=True)
-    AndGate(field=field, x=10, y=10)
-    OrGate(field=field, x=15, y=10)
-    NotGate(field=field, x=10, y=5)
-    Timer(field=field, x=20, y=10)
+    # Switch(field=field, x=3, y=2, on=True)
+    # AndGate(field=field, x=10, y=10)
+    # OrGate(field=field, x=15, y=10)
+    # NotGate(field=field, x=10, y=5)
+    # Timer(field=field, x=20, y=10)
     for i in range(10):
         Wire(field=field)
-
     init_items()
 
     global frame 
@@ -60,6 +89,10 @@ def main():
                     game_state = "gameon"
                 elif event.key == pygame.K_k:
                     initialise_game()
+                elif event.key == pygame.K_s:
+                    save_level()
+                elif event.key == pygame.K_l:
+                    load_level()
                 else:
                     pass
             if event.type == pygame.MOUSEBUTTONDOWN:

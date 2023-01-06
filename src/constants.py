@@ -74,4 +74,6 @@ SELECT_FRAME = pygame.image.load("./asset/select_frame.png").convert_alpha()
 MAX_ATTEMPT = 300
 SWITCH_POWER = 800
 
-# UPDATE_QUEUE = []
+LEVEL_PATH = "./levels/"
+
+
