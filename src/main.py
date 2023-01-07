@@ -39,11 +39,6 @@ def initialise_game():
     game_state = "gameon"
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
-    # Switch(field=field, x=3, y=2, on=True)
-    # AndGate(field=field, x=10, y=10)
-    # OrGate(field=field, x=15, y=10)
-    # NotGate(field=field, x=10, y=5)
-    # Timer(field=field, x=20, y=10)
     for i in range(500):
         Wire(field=field)
     init_items()

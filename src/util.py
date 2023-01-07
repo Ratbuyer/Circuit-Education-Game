@@ -26,9 +26,14 @@ def rot_center(image, angle):
     rot_image = rot_image.subsurface(rot_rect).copy()
     return rot_image
 
+def out_bound_X(x):
+    return (x < 0 or x > WIDTH - 1)
+
+def out_bound_Y(y):
+    return (y < 0 or y > HEIGHT - 1)
+    
 def out_bound(x, y):
-    return (x < 0 or x > WIDTH - 1 or 
-            y < 0 or y > HEIGHT - 1)
+    return (out_bound_X(x) or out_bound_Y(y))
     
 
 # return array of 4 neighbour object, value=None when no neighbour

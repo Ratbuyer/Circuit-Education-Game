@@ -15,8 +15,10 @@ class SelectFrame:
 
     def update(self, mouse_pos, field):
         tile_coord = calc_tile_coord(mouse_pos)
-        self.x = tile_coord[0]
-        self.y = tile_coord[1]
+        if not out_bound_X(tile_coord[0]):
+            self.x = tile_coord[0]
+        if not out_bound_Y(tile_coord[1]):
+            self.y = tile_coord[1]
         
     
     def click(self, mouse_press, field):
