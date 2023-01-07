@@ -44,7 +44,7 @@ def initialise_game():
     # OrGate(field=field, x=15, y=10)
     # NotGate(field=field, x=10, y=5)
     # Timer(field=field, x=20, y=10)
-    for i in range(10):
+    for i in range(500):
         Wire(field=field)
     init_items()
 
@@ -71,6 +71,7 @@ def render_elements():
         for elem in i:
             if elem:
                 elem.render(WIN)
+                # elem.render_box(WIN) #debug box renderer
     frame.render(WIN)
 
 def main():
@@ -109,7 +110,7 @@ def main():
             render_elements()
         
             pygame.display.update()
-            clock.tick(60)
+            clock.tick(FPS)
 
 if __name__ == "__main__":
 

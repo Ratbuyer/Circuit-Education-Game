@@ -20,11 +20,15 @@ class SelectFrame:
         
     
     def click(self, mouse_press, field):
+        if out_bound(self.x, self.y):
+            return
         if mouse_press[0] and field[self.x][self.y]:
             field[self.x][self.y].interact()
         elif mouse_press[2] and field[self.x][self.y]==None:
             Wire(field=field, x=self.x, y=self.y)
             item = field[self.x][self.y]
+            if not item:
+                raise ValueError
             item.initialise(field)
             neighbours = get_neighbours(item, field)
             for i in neighbours:

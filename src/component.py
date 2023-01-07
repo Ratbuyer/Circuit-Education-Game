@@ -5,18 +5,16 @@ from util import *
 def str_to_class(classname):
     return getattr(sys.modules[__name__], classname)
 
-class Wire:
+class Component:
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        if not x or not y:
+        if x==None or y==None:
             self.rand_place(field=field)
         else:
-            self.place(field=field, x=x, y=y)
-        self.output  = [1, 1, 1, 1]
-        self.port    = [1, 1, 1, 1]
-        self.connect = [0, 0, 0, 0]
-        self.power = 0
-        self.on = False
-        self.img = []
+            if not out_bound(x, y):
+                self.place(field=field, x=x, y=y)
+            else:
+                pass
+        self.on = on
 
     # place item in field at (x, y)
     def place(self, field, x, y):
@@ -30,8 +28,8 @@ class Wire:
     # randomly place item in field,
     # if tile occupied recursively re-place, until depth=attempt
     def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(BOUND[WEST], BOUND[EAST])
-        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
+        self.x = randint(0, WIDTH - 1)
+        self.y = randint(0, HEIGHT - 1)
         if field[self.x][self.y] == None:
             field[self.x][self.y] = self
         else:
@@ -39,6 +37,35 @@ class Wire:
                 self.rand_place(field=field, attempt=attempt-1)
             else:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
+    
+    def initialise(self, field):
+        pass
+    
+    def interact(self):
+        pass
+    
+    def update(self, field):
+        pass
+    
+    def render(self, screen):
+        pass
+
+    def render_box(self, screen):
+        blit_coord = calc_pix_coord(self)
+        # box boundary display
+        debug_box = pygame.Rect(blit_coord, (TILE_SIDE, TILE_SIDE))
+        pygame.draw.rect(screen, GREEN, debug_box, width=1)
+
+
+
+class Wire(Component):
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
+        super().__init__(field=field, x=x, y=y, on=on)
+        self.output  = [1, 1, 1, 1]
+        self.port    = [1, 1, 1, 1]
+        self.connect = [0, 0, 0, 0]
+        self.power = 0
+        self.img = []
 
     def initialise(self, field):
         neighbours = get_neighbours(item=self, field=field)
@@ -86,43 +113,16 @@ class Wire:
         blit_coord = calc_pix_coord(self)
         screen.blit(self.img[self.on], blit_coord)
 
-        # # box boundary display
-        # debug_box = pygame.Rect(blit_coord, (TILE_SIDE, TILE_SIDE))
-        # pygame.draw.rect(screen, GREEN, debug_box, width=1)
-    
     def interact(self):
         pass
 
 
-class Switch:
+class Switch(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        if not x or not y:
-            self.rand_place(field=field)
-        else:
-            self.place(field=field, x=x, y=y)
+        super().__init__(field, x, y, on)
         self.output = [1, 1, 1, 1]
         self.port  = [1, 1, 1, 1]
-        self.on = on
         self.power = SWITCH_POWER if self.on else 0
-
-    def place(self, field, x, y):
-        self.x = x
-        self.y = y
-        if field[x][y] == None:
-            field[x][y] = self
-        else:
-            print("Failed to place component")
-
-    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(BOUND[WEST], BOUND[EAST])
-        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
-        if field[self.x][self.y] == None:
-            field[self.x][self.y] = self
-        else:
-            if attempt >= 0:
-                self.rand_place(field=field, attempt=attempt-1)
-            else:
-                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
     
     def update(self, field):
         pass
@@ -140,35 +140,12 @@ class Switch:
         pass
 
 
-class AndGate:
+class AndGate(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        if not x or not y:
-            self.rand_place(field=field)
-        else:
-            self.place(field=field, x=x, y=y)
+        super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
         self.port  = [1, 1, 0, 1]
-        self.on = on
         self.power = 0
-
-    def place(self, field, x, y):
-        self.x = x
-        self.y = y
-        if field[x][y] == None:
-            field[x][y] = self
-        else:
-            print("Failed to place component")
-
-    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(BOUND[WEST], BOUND[EAST])
-        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
-        if field[self.x][self.y] == None:
-            field[self.x][self.y] = self
-        else:
-            if attempt >= 0:
-                self.rand_place(field=field, attempt=attempt-1)
-            else:
-                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
     def update(self, field):
         neighbours = get_neighbours(self, field)
@@ -186,35 +163,12 @@ class AndGate:
     def initialise(self, field):
         pass
 
-class OrGate:
+class OrGate(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        if not x or not y:
-            self.rand_place(field=field)
-        else:
-            self.place(field=field, x=x, y=y)
+        super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
         self.port  = [1, 1, 0, 1]
-        self.on = on
         self.power = 0
-
-    def place(self, field, x, y):
-        self.x = x
-        self.y = y
-        if field[x][y] == None:
-            field[x][y] = self
-        else:
-            print("Failed to place component")
-
-    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(BOUND[WEST], BOUND[EAST])
-        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
-        if field[self.x][self.y] == None:
-            field[self.x][self.y] = self
-        else:
-            if attempt >= 0:
-                self.rand_place(field=field, attempt=attempt-1)
-            else:
-                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
     def update(self, field):
         supplies = get_power_supply(self, field)
@@ -230,35 +184,12 @@ class OrGate:
     def initialise(self, field):
         pass
 
-class NotGate:
+class NotGate(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        if not x or not y:
-            self.rand_place(field=field)
-        else:
-            self.place(field=field, x=x, y=y)
+        super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
         self.port  = [1, 0, 1, 0]
-        self.on = on
         self.power = 0
-
-    def place(self, field, x, y):
-        self.x = x
-        self.y = y
-        if field[x][y] == None:
-            field[x][y] = self
-        else:
-            print("Failed to place component")
-
-    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(BOUND[WEST], BOUND[EAST])
-        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
-        if field[self.x][self.y] == None:
-            field[self.x][self.y] = self
-        else:
-            if attempt >= 0:
-                self.rand_place(field=field, attempt=attempt-1)
-            else:
-                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
     def update(self, field):
         supplies = get_power_supply(self, field)
@@ -274,38 +205,15 @@ class NotGate:
     def initialise(self, field):
         pass
                 
-class Timer:
+class Timer(Component):
     def __init__(self, field=None, x=None, y=None, on=False, maxsec=2) -> None:
-        if not x or not y:
-            self.rand_place(field=field)
-        else:
-            self.place(field=field, x=x, y=y)
+        super().__init__(field, x, y, on)
         self.output = [1, 1, 1, 1]
         self.port  = [1, 1, 1, 1]
-        self.on = on
         self.tick = 0
         self.maxtick = maxsec * FPS
         self.eith_tick = self.maxtick/8
         self.power = 0
-
-    def place(self, field, x, y):
-        self.x = x
-        self.y = y
-        if field[x][y] == None:
-            field[x][y] = self
-        else:
-            print("Failed to place component")
-
-    def rand_place(self, field=None, attempt=MAX_ATTEMPT):
-        self.x = randint(BOUND[WEST], BOUND[EAST])
-        self.y = randint(BOUND[NORTH], BOUND[SOUTH])
-        if field[self.x][self.y] == None:
-            field[self.x][self.y] = self
-        else:
-            if attempt >= 0:
-                self.rand_place(field=field, attempt=attempt-1)
-            else:
-                print(f"rand-place failed after {MAX_ATTEMPT} attempt")
 
     def update(self, field):
         if self.tick >= 0 and self.tick < self.maxtick:

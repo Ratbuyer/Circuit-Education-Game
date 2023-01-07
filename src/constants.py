@@ -1,11 +1,19 @@
 import pygame
 
+# directional constant
+NORTH, WEST, SOUTH, EAST  = 0, 1, 2, 3
+OPPOSITE = [SOUTH, EAST, NORTH, WEST]
+OFFSET = [
+    [0, -1],
+    [-1, 0],
+    [0, 1],
+    [1, 0]
+]
+DIREC = 4
+
 # dimension constant
 TILE_SIDE = 40
 SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
-WIDTH = int(SCREEN_WIDTH/TILE_SIDE)
-HEIGHT = int(SCREEN_HEIGHT/TILE_SIDE)
-
 DISP_BOUND = [
     TILE_SIDE * 2, # North padding
     TILE_SIDE * 3, # West padding
@@ -13,6 +21,9 @@ DISP_BOUND = [
     SCREEN_WIDTH - (TILE_SIDE * 3)  # East padding
 ]
 BOUND = [int(d/TILE_SIDE) for d in DISP_BOUND]
+
+WIDTH = BOUND[EAST] - BOUND[WEST]
+HEIGHT = BOUND[SOUTH] - BOUND[NORTH]
 
 # game ini & constant
 pygame.init()
@@ -25,18 +36,6 @@ FPS = 60
 WHITE = (255, 255, 255)
 GREY  = (105, 105, 105)
 GREEN = (0, 255, 0)
-
-
-# directional constant
-NORTH, WEST, SOUTH, EAST  = 0, 1, 2, 3
-OPPOSITE = [SOUTH, EAST, NORTH, WEST]
-OFFSET = [
-    [0, -1],
-    [-1, 0],
-    [0, 1],
-    [1, 0]
-]
-DIREC = 4
 
 # game asset loading
 AND_IMG = pygame.image.load("./asset/gates/and.png").convert_alpha()
@@ -72,7 +71,7 @@ VOID = pygame.image.load("./asset/void.png").convert_alpha()
 SELECT_FRAME = pygame.image.load("./asset/select_frame.png").convert_alpha()
 
 MAX_ATTEMPT = 300
-SWITCH_POWER = 800
+SWITCH_POWER = 50
 
 LEVEL_PATH = "./levels/"
 

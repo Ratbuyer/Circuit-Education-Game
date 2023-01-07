@@ -5,13 +5,13 @@ from constants import *
 
 # return a coord pair coverted from TILE -> PIX
 def calc_pix_coord(item):
-    x = int(TILE_SIDE * item.x)
-    y = int(TILE_SIDE * item.y)
+    x = int(TILE_SIDE * item.x) + DISP_BOUND[WEST]
+    y = int(TILE_SIDE * item.y) + DISP_BOUND[NORTH]
     return (x, y)
-
+# return a coord pair coverted from PIX -> TILE
 def calc_tile_coord(tup):
-    x = tup[0]//TILE_SIDE
-    y = tup[1]//TILE_SIDE
+    x = tup[0]//TILE_SIDE - BOUND[WEST]
+    y = tup[1]//TILE_SIDE - BOUND[NORTH]
     return (x, y)
 
 def calc_angle(cur, maximum):
@@ -26,6 +26,11 @@ def rot_center(image, angle):
     rot_image = rot_image.subsurface(rot_rect).copy()
     return rot_image
 
+def out_bound(x, y):
+    return (x < 0 or x > WIDTH - 1 or 
+            y < 0 or y > HEIGHT - 1)
+    
+
 # return array of 4 neighbour object, value=None when no neighbour
 def get_neighbours(item, field):
     neighbours = []
@@ -33,10 +38,7 @@ def get_neighbours(item, field):
         neighbour = None
         neighbourX = item.x + OFFSET[direc][0]
         neighbourY = item.y + OFFSET[direc][1]
-        if (neighbourX < BOUND[WEST] or 
-            neighbourX > BOUND[EAST] or 
-            neighbourY < BOUND[NORTH] or 
-            neighbourY > BOUND[SOUTH]):
+        if out_bound(neighbourX, neighbourY):
             neighbours.append(neighbour)
             continue
         neighbour = field[neighbourX][neighbourY]
