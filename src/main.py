@@ -34,7 +34,7 @@ def load_level():
     
 
 def initialise_game():
-    WIN.fill(GREY)
+    WIN.fill(BLACK)
     global game_state
     game_state = "gameon"
     global field
@@ -45,6 +45,8 @@ def initialise_game():
 
     global frame 
     frame = SelectFrame(x=3, y=3)
+    global inventory
+    inventory = Inventory()
     
 
 def init_items():
@@ -58,16 +60,18 @@ def update_components(mouse_pos):
         for elem in i:
             if elem:
                 elem.update(field)
-    frame.update(mouse_pos, field)
+    frame.update(mouse_pos)
+    inventory.update(mouse_pos)
 
 def render_elements():
-    WIN.fill(GREY)
+    WIN.fill(BLACK)
     for i in field:
         for elem in i:
             if elem:
                 elem.render(WIN)
                 # elem.render_box(WIN) #debug box renderer
     frame.render(WIN)
+    inventory.render(WIN)
 
 def main():
     initialise_game()
@@ -85,10 +89,12 @@ def main():
                     game_state = "gameon"
                 elif event.key == pygame.K_k:
                     initialise_game()
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_j:
                     save_level()
                 elif event.key == pygame.K_l:
                     load_level()
+                elif event.key in INV_KEYS.keys():
+                    inventory.select_tool(INV_KEYS[event.key])
                 else:
                     pass
             if event.type == pygame.MOUSEBUTTONDOWN:
