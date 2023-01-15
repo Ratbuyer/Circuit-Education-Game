@@ -139,17 +139,35 @@ class AndGate(Component):
         self.port  = [1, 1, 0, 1]
 
     def update(self, field):
-        neighbours = get_neighbours(self, field)
-        if (neighbours[WEST] and neighbours[WEST].output[OPPOSITE[WEST]] and
-            neighbours[EAST] and neighbours[EAST].output[OPPOSITE[EAST]] and
-            neighbours[WEST].power > 0  and neighbours[EAST].power > 0):
-            self.power = SWITCH_POWER
-        else:
-            self.power = 0
-    
+
+      supplies = get_power_supply(self, field)
+      if (supplies[WEST] and supplies[EAST]):
+          self.power = SWITCH_POWER
+      else:
+          self.power = 0
+
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(AND_IMG, blit_coord)
+
+
+class NandGate(Component):
+
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
+        super().__init__(field, x, y, on)
+        self.output = [1, 0, 0, 0]
+        self.port  = [1, 1, 0, 1]
+    
+    def update(self, field):
+      supplies = get_power_supply(self, field)
+      if (supplies[WEST] and supplies[EAST]):
+          self.power = 0
+      else:
+          self.power = SWITCH_POWER
+    
+    def render(self, screen):
+      blit_coord = calc_pix_coord(self)
+      pass
         
 
 class OrGate(Component):
