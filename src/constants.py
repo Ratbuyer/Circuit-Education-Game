@@ -1,4 +1,10 @@
 import pygame
+from pygame.image import load as limg
+from pygame.locals import *
+
+def scale(img, factor):
+    size = [i*factor for i in img.get_size()]
+    return pygame.transform.scale(img, size)
 
 # directional constant
 NORTH, WEST, SOUTH, EAST  = 0, 1, 2, 3
@@ -36,21 +42,22 @@ FPS = 60
 WHITE = (255, 255, 255)
 GREY  = (105, 105, 105)
 GREEN = (0, 255, 0)
+BLACK = (0, 0, 0)
 
 # game asset loading
-AND_IMG = pygame.image.load("./asset/gates/and.png").convert_alpha()
-OR_IMG = pygame.image.load("./asset/gates/or.png").convert_alpha()
-NOT_IMG = pygame.image.load("./asset/gates/not.png").convert_alpha()
+AND_IMG = limg("./asset/gates/and.png").convert_alpha()
+OR_IMG = limg("./asset/gates/or.png").convert_alpha()
+NOT_IMG = limg("./asset/gates/not.png").convert_alpha()
 
-TIMER_BASE = pygame.image.load("./asset/timer/timer_base.png").convert_alpha()
-TIMER_HAND = pygame.image.load("./asset/timer/timer_hand.png").convert_alpha()
+TIMER_BASE = limg("./asset/timer/timer_base.png").convert_alpha()
+TIMER_HAND = limg("./asset/timer/timer_hand.png").convert_alpha()
 
 WIRE_LONE = [
-    pygame.image.load("./asset/wire/wire_lone_off.png").convert_alpha(),
-    pygame.image.load("./asset/wire/wire_lone_on.png").convert_alpha()
+    limg("./asset/wire/wire_lone_off.png").convert_alpha(),
+    limg("./asset/wire/wire_lone_on.png").convert_alpha()
 ]
 
-WIRE_ON_IMG = pygame.image.load("./asset/wire/wire_on.png").convert_alpha()
+WIRE_ON_IMG = limg("./asset/wire/wire_on.png").convert_alpha()
 WIRE_ON = [
     pygame.transform.rotate(WIRE_ON_IMG, 0),
     pygame.transform.rotate(WIRE_ON_IMG, 90),
@@ -58,17 +65,42 @@ WIRE_ON = [
     pygame.transform.rotate(WIRE_ON_IMG, 270)
 ]
 
-WIRE_OFF_IMG = pygame.image.load("./asset/wire/wire_off.png").convert_alpha()
+WIRE_OFF_IMG = limg("./asset/wire/wire_off.png").convert_alpha()
 WIRE_OFF = [
     pygame.transform.rotate(WIRE_OFF_IMG, 0),
     pygame.transform.rotate(WIRE_OFF_IMG, 90),
     pygame.transform.rotate(WIRE_OFF_IMG, 180),
     pygame.transform.rotate(WIRE_OFF_IMG, 270)
 ]
-SWITCH_COVER = pygame.image.load("./asset/switch_cover.png").convert_alpha()
-VOID = pygame.image.load("./asset/void.png").convert_alpha()
+SWITCH_COVER = limg("./asset/switch_cover.png").convert_alpha()
+VOID = limg("./asset/void.png").convert_alpha()
 
-SELECT_FRAME = pygame.image.load("./asset/select_frame.png").convert_alpha()
+SELECT_FRAME = limg("./asset/select_frame.png").convert_alpha()
+
+# INVENTORY_FRAME = scale(limg("./asset/inventory.png").convert_alpha(), 2)
+# INVENTORY_FRAME = pygame.transform.scale(INVENTORY_FRAME, size)
+INV_LABEL = scale(limg("./asset/inventory/inv_label.png").convert_alpha(), 2)
+INV_DEAC_BASE = scale(limg("./asset/inventory/inv_deactive_base.png").convert_alpha(), 2)
+INV_AC_BASE = limg("./asset/inventory/inv_active_base.png").convert_alpha()
+INV_KEYS = {
+    K_1: 0,
+    K_2: 1,
+    K_3: 2,
+    K_4: 3,
+    K_q: 4,
+    K_w: 5,
+    K_e: 6,
+    K_r: 7,
+    K_a: 8,
+    K_s: 9,
+    K_d: 10,
+    K_f: 11,
+    K_z: 12,
+    K_x: 13,
+    K_c: 14,
+    K_v: 15
+}
+
 
 MAX_ATTEMPT = 300
 SWITCH_POWER = 50
