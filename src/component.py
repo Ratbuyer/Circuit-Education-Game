@@ -3,12 +3,15 @@ from constants import *
 from util import *
 
 # return class reference of classname(str)
+
+
 def str_to_class(classname):
     return getattr(sys.modules[__name__], classname)
 
+
 class Component:
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        if x==None or y==None:
+        if x == None or y == None:
             self.rand_place(field=field)
         else:
             if not out_bound(x, y):
@@ -39,16 +42,16 @@ class Component:
                 self.rand_place(field=field, attempt=attempt-1)
             else:
                 print(f"rand-place failed after {MAX_ATTEMPT} attempt")
-    
+
     def initialise(self, field):
         pass
-    
+
     def interact(self):
         pass
-    
+
     def update(self, field):
         pass
-    
+
     def render(self, screen):
         pass
 
@@ -59,12 +62,11 @@ class Component:
         pygame.draw.rect(screen, GREEN, debug_box, width=1)
 
 
-
 class Wire(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
         super().__init__(field=field, x=x, y=y, on=on)
-        self.output  = [1, 1, 1, 1]
-        self.port    = [1, 1, 1, 1]
+        self.output = [1, 1, 1, 1]
+        self.port = [1, 1, 1, 1]
         self.connect = [0, 0, 0, 0]
         self.img = []
 
@@ -91,7 +93,6 @@ class Wire(Component):
                     on_img.blit(WIRE_ON[direc], blit_origin)
             self.img = [off_img, on_img]
 
-
     def update(self, field):
         max_source = 0
 
@@ -108,8 +109,8 @@ class Wire(Component):
 
         self.on = self.power > 0
 
-
     # render item on given screen
+
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(self.img[self.on], blit_coord)
@@ -119,9 +120,9 @@ class Switch(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
         super().__init__(field, x, y, on)
         self.output = [1, 1, 1, 1]
-        self.port  = [1, 1, 1, 1]
+        self.port = [1, 1, 1, 1]
         self.power = SWITCH_POWER if self.on else 0
-        
+
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(WIRE_LONE[self.on], blit_coord)
@@ -136,45 +137,40 @@ class AndGate(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
         super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
-        self.port  = [1, 1, 0, 1]
+        self.port = [1, 1, 0, 1]
 
     def update(self, field):
 
-      supplies = get_power_supply(self, field)
-      if (supplies[WEST] and supplies[EAST]):
-          self.power = SWITCH_POWER
-      else:
-          self.power = 0
+        supplies = get_power_supply(self, field)
+        if (supplies[WEST] and supplies[EAST]):
+            self.power = SWITCH_POWER
+        else:
+            self.power = 0
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(AND_IMG, blit_coord)
 
 
-class NandGate(Component):
+class NandGate(AndGate):
 
-    def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        super().__init__(field, x, y, on)
-        self.output = [1, 0, 0, 0]
-        self.port  = [1, 1, 0, 1]
-    
     def update(self, field):
-      supplies = get_power_supply(self, field)
-      if (supplies[WEST] and supplies[EAST]):
-          self.power = 0
-      else:
-          self.power = SWITCH_POWER
-    
+        supplies = get_power_supply(self, field)
+        if (supplies[WEST] and supplies[EAST]):
+            self.power = 0
+        else:
+            self.power = SWITCH_POWER
+
     def render(self, screen):
-      blit_coord = calc_pix_coord(self)
-      pass
-        
+        blit_coord = calc_pix_coord(self)
+        pass
+
 
 class OrGate(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
         super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
-        self.port  = [1, 1, 0, 1]
+        self.port = [1, 1, 0, 1]
 
     def update(self, field):
         supplies = get_power_supply(self, field)
@@ -182,17 +178,62 @@ class OrGate(Component):
             self.power = SWITCH_POWER
         else:
             self.power = 0
-    
+
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(OR_IMG, blit_coord)
+
+
+class NorGate(OrGate):
+
+    def update(self, field):
+        supplies = get_power_supply(self, field)
+        if (supplies[WEST] or supplies[EAST]):
+            self.power = 0
+        else:
+            self.power = SWITCH_POWER
+
+    def render(self, screen):
+        blit_coord = calc_pix_coord(self)
+        pass
+
+
+class XorGate(OrGate):
+
+    def update(self, field):
+        supplies = get_power_supply(self, field)
         
+        if supplies[WEST] and supplies[EAST]:
+            self.power = 0
+        elif (not supplies[WEST]) and (not supplies[EAST]):
+            self.power = 0
+        elif supplies[WEST] and (not supplies[EAST]):
+            self.power = SWITCH_POWER
+        elif supplies[EAST] and (not supplies[WEST]):
+            self.power = SWITCH_POWER
+
+
+    def render(self, screen):
+        blit_coord = calc_pix_coord(self)
+        pass
+
+
+class XandGate(XorGate):
+
+    def update(self, field):
+        super.update(self, field)
+        self.power = 0 if self.power else SWITCH_POWER
+    
+    def render(self, screen):
+        blit_coord = calc_pix_coord(self)
+        pass
+
 
 class NotGate(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
         super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
-        self.port  = [1, 0, 1, 0]
+        self.port = [1, 0, 1, 0]
 
     def update(self, field):
         supplies = get_power_supply(self, field)
@@ -200,16 +241,17 @@ class NotGate(Component):
             self.power = 0
         else:
             self.power = SWITCH_POWER
-    
+
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(NOT_IMG, blit_coord)
-                
+
+
 class Timer(Component):
     def __init__(self, field=None, x=None, y=None, on=False, maxsec=2) -> None:
         super().__init__(field, x, y, on)
         self.output = [1, 1, 1, 1]
-        self.port  = [1, 1, 1, 1]
+        self.port = [1, 1, 1, 1]
         self.tick = 0
         self.maxtick = maxsec * FPS
         self.eith_tick = self.maxtick/8
@@ -220,10 +262,10 @@ class Timer(Component):
         else:
             self.tick = 0
             self.power = 0 if self.power else SWITCH_POWER
-    
+
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         rot_angle = calc_angle(self.tick, self.maxtick)
         hand_img = rot_center(TIMER_HAND, rot_angle)
         screen.blit(TIMER_BASE, blit_coord)
-        screen.blit(hand_img, blit_coord)        
+        screen.blit(hand_img, blit_coord)
