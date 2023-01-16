@@ -166,6 +166,7 @@ class NandGate(AndGate):
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
+        screen.blit(NAND_IMG, blit_coord)
         pass
 
 
@@ -198,6 +199,7 @@ class NorGate(OrGate):
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
+        screen.blit(NOR_IMG, blit_coord)
         pass
 
 
@@ -218,17 +220,19 @@ class XorGate(OrGate):
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
+        screen.blit(XOR_IMG, blit_coord)
         pass
 
 
-class XandGate(XorGate):
+class XnorGate(XorGate):
 
     def update(self, field):
-        super.update(self, field)
+        super().update(field)
         self.power = 0 if self.power else SWITCH_POWER
     
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
+        screen.blit(XNOR_IMG, blit_coord)
         pass
 
 
