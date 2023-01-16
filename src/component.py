@@ -61,6 +61,11 @@ class Component:
         debug_box = pygame.Rect(blit_coord, (TILE_SIDE, TILE_SIDE))
         pygame.draw.rect(screen, GREEN, debug_box, width=1)
 
+class Gates(Component):
+    def __init__(self, field=None, x=None, y=None, on=False) -> None:
+        super().__init__(field, x, y, on)
+        self.output = [1, 0, 0, 0]
+        self.port = [1, 1, 0, 1]
 
 class Wire(Component):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
@@ -136,33 +141,22 @@ class Switch(Component):
         self.power = SWITCH_POWER if self.on else 0
 
 
-class AndGate(Component):
-    def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        super().__init__(field, x, y, on)
-        self.output = [1, 0, 0, 0]
-        self.port = [1, 1, 0, 1]
-
+class AndGate(Gates):
     def update(self, field):
-
         supplies = get_power_supply(self, field)
-        if (supplies[WEST] and supplies[EAST]):
-            self.power = SWITCH_POWER
-        else:
-            self.power = 0
+        on = (supplies[WEST] and supplies[EAST])
+        self.power = SWITCH_POWER if on else 0
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(AND_IMG, blit_coord)
 
 
-class NandGate(AndGate):
-
+class NandGate(Gates):
     def update(self, field):
         supplies = get_power_supply(self, field)
-        if (supplies[WEST] and supplies[EAST]):
-            self.power = 0
-        else:
-            self.power = SWITCH_POWER
+        on = not (supplies[WEST] and supplies[EAST])
+        self.power = SWITCH_POWER if on else 0
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
@@ -170,32 +164,23 @@ class NandGate(AndGate):
         pass
 
 
-class OrGate(Component):
-    def __init__(self, field=None, x=None, y=None, on=False) -> None:
-        super().__init__(field, x, y, on)
-        self.output = [1, 0, 0, 0]
-        self.port = [1, 1, 0, 1]
-
+class OrGate(Gates):
     def update(self, field):
         supplies = get_power_supply(self, field)
-        if (supplies[WEST] or supplies[EAST]):
-            self.power = SWITCH_POWER
-        else:
-            self.power = 0
+        on = (supplies[WEST] or supplies[EAST])
+        self.power = SWITCH_POWER if on else 0
+
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
         screen.blit(OR_IMG, blit_coord)
 
 
-class NorGate(OrGate):
-
+class NorGate(Gates):
     def update(self, field):
         supplies = get_power_supply(self, field)
-        if (supplies[WEST] or supplies[EAST]):
-            self.power = 0
-        else:
-            self.power = SWITCH_POWER
+        on = not (supplies[WEST] or supplies[EAST])
+        self.power = SWITCH_POWER if on else 0
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
@@ -203,20 +188,11 @@ class NorGate(OrGate):
         pass
 
 
-class XorGate(OrGate):
-
+class XorGate(Gates):
     def update(self, field):
         supplies = get_power_supply(self, field)
-        
-        if supplies[WEST] and supplies[EAST]:
-            self.power = 0
-        elif (not supplies[WEST]) and (not supplies[EAST]):
-            self.power = 0
-        elif supplies[WEST] and (not supplies[EAST]):
-            self.power = SWITCH_POWER
-        elif supplies[EAST] and (not supplies[WEST]):
-            self.power = SWITCH_POWER
-
+        on = bool(supplies[WEST])!=bool(supplies[EAST])
+        self.power = SWITCH_POWER if on else 0
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
@@ -224,11 +200,11 @@ class XorGate(OrGate):
         pass
 
 
-class XnorGate(XorGate):
-
+class XnorGate(Gates):
     def update(self, field):
-        super().update(field)
-        self.power = 0 if self.power else SWITCH_POWER
+        supplies = get_power_supply(self, field)
+        on = bool(supplies[WEST])==bool(supplies[EAST])
+        self.power = SWITCH_POWER if on else 0
     
     def render(self, screen):
         blit_coord = calc_pix_coord(self)
@@ -236,7 +212,7 @@ class XnorGate(XorGate):
         pass
 
 
-class NotGate(Component):
+class NotGate(Gates):
     def __init__(self, field=None, x=None, y=None, on=False) -> None:
         super().__init__(field, x, y, on)
         self.output = [1, 0, 0, 0]
@@ -244,10 +220,7 @@ class NotGate(Component):
 
     def update(self, field):
         supplies = get_power_supply(self, field)
-        if supplies[SOUTH]:
-            self.power = 0
-        else:
-            self.power = SWITCH_POWER
+        self.power = 0 if supplies[SOUTH] else SWITCH_POWER
 
     def render(self, screen):
         blit_coord = calc_pix_coord(self)

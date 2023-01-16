@@ -11,7 +11,7 @@ import inspect
 # ]
 COMP_CLASSES = sorted([
     cls for name, cls in inspect.getmembers(sys.modules[__name__], inspect.isclass) 
-    if issubclass(cls, Component) and cls!=Component
+    if issubclass(cls, Component) and cls not in [Component, Gates]
 ], key=lambda x:x.__name__)
 
 class SelectFrame:
@@ -66,7 +66,7 @@ class Inventory:
         self.comp_count = len(self.disp_comps)
         self.choice = 0
         self.tool = self.comps[self.choice]
-        print([i.__name__ for i in self.disp_comps])
+        # print([i.__name__ for i in self.disp_comps])
 
     def update(self, mouse_pos):
         pass
@@ -86,7 +86,6 @@ class Inventory:
         if index < self.comp_count:
             self.choice = index
             self.tool = self.comps[index]
-            print(self.tool)
     
     def get_mouse_idx(self, mouse_pos):
         x = mouse_pos[0] - INV_BOUND[WEST]
@@ -98,7 +97,7 @@ class Inventory:
         if mouse_press[MLEFT]:
             idx = self.get_mouse_idx(mouse_pos)
             self.select_tool(idx)
-            
+
     def render_box(self, screen):
         blit_coord = (self.x, self.y)
         # box boundary display
