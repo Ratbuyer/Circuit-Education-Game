@@ -70,6 +70,7 @@ class Wire(Component):
         self.connect = [0, 0, 0, 0]
         self.img = []
 
+
     def initialise(self, field):
         neighbours = get_neighbours(item=self, field=field)
         for direc in range(DIREC):
@@ -80,6 +81,7 @@ class Wire(Component):
             else:
                 self.connect[direc] = 0
         self.set_img()
+
 
     def set_img(self):
         blit_origin = (0, 0)
@@ -92,6 +94,7 @@ class Wire(Component):
                     off_img.blit(WIRE_OFF[direc], blit_origin)
                     on_img.blit(WIRE_ON[direc], blit_origin)
             self.img = [off_img, on_img]
+
 
     def update(self, field):
         max_source = 0
