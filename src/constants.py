@@ -77,30 +77,26 @@ VOID = limg("./asset/void.png").convert_alpha()
 
 SELECT_FRAME = limg("./asset/select_frame.png").convert_alpha()
 
-# INVENTORY_FRAME = scale(limg("./asset/inventory.png").convert_alpha(), 2)
-# INVENTORY_FRAME = pygame.transform.scale(INVENTORY_FRAME, size)
 INV_LABEL = scale(limg("./asset/inventory/inv_label.png").convert_alpha(), 2)
 INV_DEAC_BASE = scale(limg("./asset/inventory/inv_deactive_base.png").convert_alpha(), 2)
 INV_AC_BASE = limg("./asset/inventory/inv_active_base.png").convert_alpha()
 INV_KEYS = {
-    K_1: 0,
-    K_2: 1,
-    K_3: 2,
-    K_4: 3,
-    K_q: 4,
-    K_w: 5,
-    K_e: 6,
-    K_r: 7,
-    K_a: 8,
-    K_s: 9,
-    K_d: 10,
-    K_f: 11,
-    K_z: 12,
-    K_x: 13,
-    K_c: 14,
-    K_v: 15
+    K_1: 0, K_2: 1, K_3: 2, K_4: 3,
+    K_q: 4, K_w: 5, K_e: 6, K_r: 7,
+    K_a: 8, K_s: 9, K_d: 10, K_f: 11,
+    K_z: 12, K_x: 13, K_c: 14, K_v: 15
 }
+INV_WIDTH = INV_LABEL.get_width()
+INV_HEIGHT = INV_LABEL.get_height()
+INV_BOUND = [
+    DISP_BOUND[SOUTH] + TILE_SIDE,
+    9 * TILE_SIDE,
+    DISP_BOUND[SOUTH] + TILE_SIDE + INV_HEIGHT,
+    9 * TILE_SIDE + INV_WIDTH
+]
 
+MLEFT = 0
+MRIGHT = 2
 
 MAX_ATTEMPT = 300
 SWITCH_POWER = 50

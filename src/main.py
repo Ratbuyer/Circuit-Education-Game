@@ -72,7 +72,29 @@ def render_elements():
                 # elem.render_box(WIN) #debug box renderer
     frame.render(WIN)
     inventory.render(WIN)
+    # inventory.render_box(WIN) #debug box renderer
 
+def handle_keydown(key):
+    if key == pygame.K_ESCAPE:
+        pygame.quit()
+        exit()
+    elif key == pygame.K_k:
+        initialise_game()
+    elif key == pygame.K_j:
+        save_level()
+    elif key == pygame.K_l:
+        load_level()
+    elif key in INV_KEYS.keys():
+        inventory.select_tool(INV_KEYS[key])
+    else:
+        pass
+
+def handle_mouse_press(mouse_press, mouse_pos):
+    if on_field(mouse_pos):
+        frame.click(mouse_press, field, inventory.tool)
+    elif on_inventory(mouse_pos):
+        inventory.click(mouse_press, mouse_pos)
+    
 def main():
     initialise_game()
     global game_state, field
@@ -82,29 +104,15 @@ def main():
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    exit()
-                elif event.key == pygame.K_SPACE and game_state in ["gameset", "idle"]:
-                    game_state = "gameon"
-                elif event.key == pygame.K_k:
-                    initialise_game()
-                elif event.key == pygame.K_j:
-                    save_level()
-                elif event.key == pygame.K_l:
-                    load_level()
-                elif event.key in INV_KEYS.keys():
-                    inventory.select_tool(INV_KEYS[event.key])
-                else:
-                    pass
+                handle_keydown(event.key)
             if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
                 mouse_press = pygame.mouse.get_pressed()
-                frame.click(mouse_press, field)
+                handle_mouse_press(mouse_press, mouse_pos)
 
         keys_pressed = pygame.key.get_pressed()
         mouse_pos = pygame.mouse.get_pos()
         if game_state == "gameon":
-
 
             update_components(mouse_pos)
 

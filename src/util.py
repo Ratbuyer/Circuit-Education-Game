@@ -74,3 +74,16 @@ def jsonify(item):
         return None
     return [json.dumps(dic)]
 
+def on_inventory(pos):
+    x, y = pos[0], pos[1]
+    return not (x < INV_BOUND[WEST] or 
+                x > INV_BOUND[EAST] or
+                y < INV_BOUND[NORTH] or 
+                y > INV_BOUND[SOUTH])
+
+def on_field(pos):
+    x, y = pos[0], pos[1]
+    return not (x < DISP_BOUND[WEST] or 
+                x > DISP_BOUND[EAST] or
+                y < DISP_BOUND[NORTH] or 
+                y > DISP_BOUND[SOUTH])
