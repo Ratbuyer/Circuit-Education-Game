@@ -99,6 +99,26 @@ INV_BOUND = [
     9 * TILE_SIDE + INV_WIDTH
 ]
 
+switch_thumb = WIRE_LONE[1].copy()
+switch_thumb.blit(SWITCH_COVER, (0, 0))
+
+timer_thumb = TIMER_BASE.copy()
+timer_thumb.blit(TIMER_HAND, (0, 0))
+
+INV_THUMB = {
+    "Wire": WIRE_LONE[1],
+    "Switch": switch_thumb,
+    "AndGate": AND_IMG,
+    "NandGate": NAND_IMG,
+    "OrGate": OR_IMG,
+    "NorGate": NOR_IMG,
+    "XorGate": XOR_IMG,
+    "XnorGate": XNOR_IMG,
+    "NotGate": NOT_IMG,
+    "Timer": timer_thumb
+}
+del switch_thumb, timer_thumb
+
 MLEFT = 0
 MRIGHT = 2
 

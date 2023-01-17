@@ -73,6 +73,11 @@ class Inventory:
 
     def render(self, screen):
         blit_coord = (self.x, self.y)
+        for i, comp in enumerate(self.disp_comps):
+            img = scale(INV_THUMB[comp.__name__], 2)
+            coord = (blit_coord[0] + i*INV_HEIGHT, blit_coord[1])
+            screen.blit(img, coord)
+
         screen.blit(INV_DEAC_BASE, blit_coord)
         screen.blit(INV_AC_BASE, self.calc_hover_pos())
         screen.blit(INV_LABEL, blit_coord)
