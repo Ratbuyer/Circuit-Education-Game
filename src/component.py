@@ -93,7 +93,7 @@ class Wire(Component):
         if self.connect == [0, 0, 0, 0]:
             self.img = WIRE_LONE
         else:
-            off_img, on_img = VOID.copy(), VOID.copy()
+            off_img, on_img = VOID.copy(), WIRE_VOID.copy()
             for direc in range(DIREC):
                 if self.connect[direc]:
                     off_img.blit(WIRE_OFF[direc], blit_origin)

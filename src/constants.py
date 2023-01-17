@@ -60,6 +60,7 @@ WIRE_LONE = [
     limg("./asset/wire/wire_lone_off.png").convert_alpha(),
     limg("./asset/wire/wire_lone_on.png").convert_alpha()
 ]
+WIRE_VOID = limg("./asset/wire/wire_void.png").convert_alpha()
 
 WIRE_ON_IMG = limg("./asset/wire/wire_on.png").convert_alpha()
 WIRE_ON = [
