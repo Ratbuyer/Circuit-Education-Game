@@ -99,6 +99,7 @@ INV_BOUND = [
     DISP_BOUND[SOUTH] + TILE_SIDE + INV_HEIGHT,
     9 * TILE_SIDE + INV_WIDTH
 ]
+INV_HOVER_GLARE = limg("./asset/inventory/inv_hover_glare.png").convert_alpha()
 
 switch_thumb = WIRE_LONE[1].copy()
 switch_thumb.blit(SWITCH_COVER, (0, 0))

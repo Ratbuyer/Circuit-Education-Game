@@ -66,9 +66,14 @@ class Inventory:
         self.comp_count = len(self.disp_comps)
         self.choice = 0
         self.tool = self.comps[self.choice]
+        self.hover = -1
         # print([i.__name__ for i in self.disp_comps])
 
     def update(self, mouse_pos):
+        if on_inventory(mouse_pos):
+            self.hover = self.get_mouse_idx(mouse_pos)
+        else:
+            self.hover = -1
         pass
 
     def render(self, screen):
@@ -77,14 +82,15 @@ class Inventory:
             img = scale(INV_THUMB[comp.__name__], 2)
             coord = (blit_coord[0] + i*INV_HEIGHT, blit_coord[1])
             screen.blit(img, coord)
-
+        if self.hover != -1:
+            screen.blit(INV_HOVER_GLARE, self.calc_hover_pos(self.hover))
         screen.blit(INV_DEAC_BASE, blit_coord)
-        screen.blit(INV_AC_BASE, self.calc_hover_pos())
+        screen.blit(INV_AC_BASE, self.calc_hover_pos(self.choice))
         screen.blit(INV_LABEL, blit_coord)
 
-    def calc_hover_pos(self):
+    def calc_hover_pos(self, idx):
         blit_coord = [self.x, self.y]
-        blit_coord[0] += INV_AC_BASE.get_width() * self.choice
+        blit_coord[0] += INV_AC_BASE.get_width() * idx
         return blit_coord
 
     def select_tool(self, index):
