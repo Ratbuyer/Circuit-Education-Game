@@ -114,3 +114,23 @@ class Inventory:
         # box boundary display
         debug_box = pygame.Rect(blit_coord, (INV_WIDTH, INV_HEIGHT))
         pygame.draw.rect(screen, GREEN, debug_box, width=1)
+
+class Button:
+    def __init__(self, coord, text=BUTTON_FONT, onClick=NOOP) -> None:
+        self.onClick = onClick
+        self.x, self.y = coord
+        self.text = BUTTON_FONT.render(text, True, CYAN)
+        self.hover = False
+    
+    def update(self, mousepos):
+        pass
+    
+    def calc_text_coord(self):
+        x = self.x + BUTTON_FRAME.get_width()//2 - self.text.get_width()//2 
+        y = self.y + BUTTON_FRAME.get_height()//2 - self.text.get_height()//2 
+        return (x, y)
+
+    def render(self, screen):
+        screen.blit(self.text, self.calc_text_coord())
+        screen.blit(BUTTON_FRAME, (self.x, self.y))
+    

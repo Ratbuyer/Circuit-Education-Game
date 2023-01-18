@@ -35,8 +35,8 @@ def load_level():
 
 def initialise_game():
     WIN.fill(BLACK)
-    global game_state
-    game_state = "edit"
+    # global game_state
+    # game_state = "edit"
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
     for i in range(500):
@@ -114,21 +114,47 @@ def disp_edit():
     pygame.display.update()
     clock.tick(FPS)
 
+def disp_main_menu():
+    def enter_edit():
+        global game_state
+        game_state = "edit"
+        initialise_game()
+        print("changed")
+
+    title_txt = "C   i   r   c   u   i   t"
+    title = TITLE_FONT.render(title_txt, True, CYAN)
+
+    buttons = Button((825,400), "Edit Mode", enter_edit)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
+            pygame.quit()
+            exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed()
+            buttons.onClick()
+
+    WIN.blit(title, TITLE_TXT_OFFSET)
+    buttons.render(WIN)
+    
+    pygame.display.update()
+    clock.tick(FPS)
+
 
 def main():
-    initialise_game()
-    global game_state, field
-
+    global game_state 
+    game_state = "main_menu"
     while True:
         if game_state == "main_menu":
-            pass
+            disp_main_menu()
         elif game_state == "edit":
             disp_edit()
         elif game_state == "play":
             pass
-
-
-        
 
 if __name__ == "__main__":
 

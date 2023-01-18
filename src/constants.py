@@ -43,6 +43,8 @@ WHITE = (255, 255, 255)
 GREY  = (105, 105, 105)
 GREEN = (  0, 255,   0)
 BLACK = (  0,   0,   0)
+CYAN  = (208, 255, 255)
+
 
 # game asset loading
 AND_IMG = limg("./asset/gates/and.png").convert_alpha()
@@ -129,4 +131,10 @@ SWITCH_POWER = 50
 
 LEVEL_PATH = "./levels/"
 
+TITLE_FONT = pygame.font.Font("./asset/font/Circuitboard-Rzno.ttf", 144)
+TITLE_TXT_OFFSET = (450, 150)
+BUTTON_FONT = pygame.font.Font("./asset/font/Library 3 am.otf", 24)
+BUTTON_FRAME = limg("./asset/button/button_frame.png").convert_alpha()
 
+
+def NOOP(): pass
