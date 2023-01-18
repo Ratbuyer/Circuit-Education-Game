@@ -41,8 +41,8 @@ FPS = 60
 # color constants
 WHITE = (255, 255, 255)
 GREY  = (105, 105, 105)
-GREEN = (0, 255, 0)
-BLACK = (0, 0, 0)
+GREEN = (  0, 255,   0)
+BLACK = (  0,   0,   0)
 
 # game asset loading
 AND_IMG = limg("./asset/gates/and.png").convert_alpha()

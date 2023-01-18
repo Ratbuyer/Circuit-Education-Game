@@ -36,7 +36,7 @@ def load_level():
 def initialise_game():
     WIN.fill(BLACK)
     global game_state
-    game_state = "gameon"
+    game_state = "edit"
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
     for i in range(500):
@@ -95,31 +95,40 @@ def handle_mouse_press(mouse_press, mouse_pos):
     elif on_inventory(mouse_pos):
         inventory.click(mouse_press, mouse_pos)
     
+def disp_edit():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.KEYDOWN:
+            handle_keydown(event.key)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed()
+            handle_mouse_press(mouse_press, mouse_pos)
+    keys_pressed = pygame.key.get_pressed()
+    mouse_pos = pygame.mouse.get_pos()
+
+    update_components(mouse_pos)
+    render_elements()
+    pygame.display.update()
+    clock.tick(FPS)
+
+
 def main():
     initialise_game()
     global game_state, field
+
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            if event.type == pygame.KEYDOWN:
-                handle_keydown(event.key)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                mouse_press = pygame.mouse.get_pressed()
-                handle_mouse_press(mouse_press, mouse_pos)
+        if game_state == "main_menu":
+            pass
+        elif game_state == "edit":
+            disp_edit()
+        elif game_state == "play":
+            pass
 
-        keys_pressed = pygame.key.get_pressed()
-        mouse_pos = pygame.mouse.get_pos()
-        if game_state == "gameon":
 
-            update_components(mouse_pos)
-
-            render_elements()
         
-            pygame.display.update()
-            clock.tick(FPS)
 
 if __name__ == "__main__":
 
