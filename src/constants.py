@@ -43,7 +43,7 @@ WHITE = (255, 255, 255)
 GREY  = (105, 105, 105)
 GREEN = (  0, 255,   0)
 BLACK = (  0,   0,   0)
-CYAN  = (208, 255, 255)
+CYAN  = (  4, 208, 255)
 
 
 # game asset loading
@@ -134,7 +134,13 @@ LEVEL_PATH = "./levels/"
 TITLE_FONT = pygame.font.Font("./asset/font/Circuitboard-Rzno.ttf", 144)
 TITLE_TXT_OFFSET = (450, 150)
 BUTTON_FONT = pygame.font.Font("./asset/font/Library 3 am.otf", 24)
+BUTTON_GLARE = limg("./asset/button/button_hover_glare.png").convert_alpha()
 BUTTON_FRAME = limg("./asset/button/button_frame.png").convert_alpha()
+BUTTON_WIDTH = BUTTON_FRAME.get_width()
+BUTTON_HEIGHT = BUTTON_FRAME.get_height()
 
+OVERLAY = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+OVERLAY.fill(BLACK)
+OVERLAY.set_alpha(127)
 
 def NOOP(): pass

@@ -87,3 +87,7 @@ def on_field(pos):
                 x > DISP_BOUND[EAST] or
                 y < DISP_BOUND[NORTH] or 
                 y > DISP_BOUND[SOUTH])
+
+def kill():
+    pygame.quit()
+    exit()

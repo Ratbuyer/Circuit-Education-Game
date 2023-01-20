@@ -116,14 +116,15 @@ class Inventory:
         pygame.draw.rect(screen, GREEN, debug_box, width=1)
 
 class Button:
-    def __init__(self, coord, text=BUTTON_FONT, onClick=NOOP) -> None:
+    def __init__(self, coord, text="TXT", onClick=NOOP) -> None:
         self.onClick = onClick
         self.x, self.y = coord
-        self.text = BUTTON_FONT.render(text, True, CYAN)
+        self.box = Rect(self.x, self.y, BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.text = BUTTON_FONT.render(text, True, WHITE)
         self.hover = False
     
     def update(self, mousepos):
-        pass
+        self.hover = self.box.collidepoint(mousepos)
     
     def calc_text_coord(self):
         x = self.x + BUTTON_FRAME.get_width()//2 - self.text.get_width()//2 
@@ -131,6 +132,14 @@ class Button:
         return (x, y)
 
     def render(self, screen):
+        if self.hover:
+            screen.blit(BUTTON_GLARE, (self.x, self.y))
         screen.blit(self.text, self.calc_text_coord())
         screen.blit(BUTTON_FRAME, (self.x, self.y))
     
+    def click_check(self, mousepos):
+        if self.onClick:
+            if self.box.collidepoint(mousepos):
+                self.onClick()
+        else:
+            return self.box.collidepoint(mousepos)

@@ -35,8 +35,6 @@ def load_level():
 
 def initialise_game():
     WIN.fill(BLACK)
-    # global game_state
-    # game_state = "edit"
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
     for i in range(500):
@@ -119,28 +117,65 @@ def disp_main_menu():
         global game_state
         game_state = "edit"
         initialise_game()
-        print("changed")
+
+    def render(buttons):
+        WIN.fill(BLACK)
+        WIN.blit(title, TITLE_TXT_OFFSET)
+        for i in buttons:
+            i.render(WIN)
+
+    def update(buttons, mousepos):
+        for i in buttons:
+            i.update(mousepos)
+
+    def quit():
+        WIN.blit(OVERLAY, (0, 0))
+        yes = Button((200, 200),text="yes", onClick=None)
+        no = Button((800, 200),text="no", onClick=None)
+        inConfirm = True
+        while inConfirm:
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_press = pygame.mouse.get_pressed()
+            yes.render(WIN)
+            no.render(WIN)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    kill()
+                if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
+                    inConfirm = False
+                if event.type == MOUSEBUTTONDOWN:
+                    inConfirm = not (yes.click_check(mouse_pos) or 
+                                no.click_check(mouse_pos))
+                    if yes.click_check(mouse_pos):
+                        kill()
+            yes.update(mouse_pos)
+            no.update(mouse_pos)
+            pygame.display.update()
+            clock.tick(FPS)
+    
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_press = pygame.mouse.get_pressed()
 
     title_txt = "C   i   r   c   u   i   t"
-    title = TITLE_FONT.render(title_txt, True, CYAN)
+    title = TITLE_FONT.render(title_txt, True, WHITE)
 
-    buttons = Button((825,400), "Edit Mode", enter_edit)
+    buttons = [
+        Button((825, 400), "Edit Mode", enter_edit),
+    ]
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
+            kill()
         if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
-            pygame.quit()
-            exit()
+            quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = pygame.mouse.get_pos()
-            mouse_press = pygame.mouse.get_pressed()
-            buttons.onClick()
-
-    WIN.blit(title, TITLE_TXT_OFFSET)
-    buttons.render(WIN)
+            for i in buttons:
+                i.click_check(mouse_pos)
     
+    update(buttons, mouse_pos)
+    
+    render(buttons)
+
     pygame.display.update()
     clock.tick(FPS)
 
@@ -156,6 +191,6 @@ def main():
         elif game_state == "play":
             pass
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     main()
