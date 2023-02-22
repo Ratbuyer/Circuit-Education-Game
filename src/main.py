@@ -4,21 +4,21 @@ from constants import *
 from component import *
 from game_element import *
 
-def save_level():
+def save_level(num : int):
     level = []
     for i in field:
         for j in i:
             if j:
                 level.append(jsonify(j))
-    with open(LEVEL_PATH+'lv1.csv', 'w', newline='') as file:
+    with open(LEVEL_PATH+'lv' + num + '.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(level)
 
-def load_level():
+def load_level(num : int):
     global field
     field = [[None]*HEIGHT for i in range(WIDTH)]
     level = []
-    with open(LEVEL_PATH+'lv1.csv', 'r') as file:
+    with open(LEVEL_PATH+'lv' + num + '.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             level.append(row)
@@ -81,9 +81,9 @@ def handle_keydown(key):
     elif key == pygame.K_k:
         initialise_game()
     elif key == pygame.K_j:
-        save_level()
+        save_level(1)
     elif key == pygame.K_l:
-        load_level()
+        load_level(1)
     elif key in INV_KEYS.keys():
         inventory.select_tool(INV_KEYS[key])
     else:
